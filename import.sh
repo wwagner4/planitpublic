@@ -1,4 +1,4 @@
-docker run -v /home/wwagner4/prj/fahrplan/data:/data \
+docker run -v /home/wwagner4/prj/planitpublic/data:/data \
 --rm \
 --network host gtfsdb \
 --database_url postgresql://docker:docker@localhost:5432/gtfsdb \
