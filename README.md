@@ -33,6 +33,7 @@ trains are available in your region for your weekend trips.
 ### Import
 
 * Checkout the software for importing gtfs from github
-  * git clone https://github.com/OpenTransitTools/gtfsdb
+  * git submodule init gtfsdb
+  * git submodule update gtfsdb
 * Follow the steps described in the 'Using with Docker' section. https://github.com/OpenTransitTools/gtfsdb
 * Import the data by calling the './import.sh' script
