@@ -1,7 +1,52 @@
-select *
-from calendar
+/*
+ Agencies to be excluded
+ ('04', '20', '52', '96', '82', '06')
++-------+---------+--------------------------------+------------+
+|exclued|agency_id|agency_name                     |routes_count|
++-------+---------+--------------------------------+------------+
+|x      |04       |Wiener Linien                   |437         |
+|       |12       |Österreichische Postbus AG      |338         |
+|       |26       |Dr. Richard NÖ                  |133         |
+|       |89       |N Bus_n                         |77          |
+|       |14       |Blaguss                         |40          |
+|       |61       |Retter                          |32          |
+|       |53       |Südburg                         |30          |
+|       |16       |Dr. Richard                     |25          |
+|       |38       |Verkehrsbetriebe Gschwindl      |24          |
+|       |81       |NÖVOG1                          |15          |
+|       |A5       |Oberger/SAD                     |14          |
+| x     |20       |Wr Neustädter Stadtw            |14          |
+|       |11       |Dr. Richard/Zuklin              |14          |
+|       |30       |Verkehrsbetriebe Burgenland GmbH|14          |
+|       |68       |Anrufsammeltaxi                 |13          |
+|       |64       |RINGO                           |11          |
+|       |21       |Zuklin                          |11          |
+|       |09       |Pichelbauer                     |9           |
+|       |03       |WLB                             |8           |
+| x     |52       |Stadtgemeinde Ybbs              |7           |
+| x     |96       |MA Eisenstadt                   |4           |
+|       |43       |Oberger                         |3           |
+|       |50       |Sagmeister                      |3           |
+|       |51       |Schuch                          |3           |
+|       |28       |Dr. Richard G1                  |2           |
+|       |85       |ARRIVA Mobility                 |2           |
+| x     |82       |Mattersburg                     |2           |
+| x     |06       |CAT                             |1           |
+|       |37       |Knaus Reisen                    |1           |
+|       |99       |VOR GmbH                        |1           |
+|       |60       |Wendl                           |1           |
+|       |88       |Dopravný podnik Bratislava      |1           |
+|       |70       |Twin City Liner                 |1           |
+|       |58       |Wurz-Frank                      |1           |
+|       |34       |Jandrisevits                    |1           |
+|       |62       |Igler                           |1           |
++-------+---------+--------------------------------+------------+
+*/
+select ' ' as exclued, a.agency_id, a.agency_name, count(*) as routes_count from routes
+join agency a on a.agency_id = routes.agency_id
+group by a.agency_id, a.agency_name
+order by routes_count desc
 ;
-
 
 /*
  All trips for one stop at a date and weekday
