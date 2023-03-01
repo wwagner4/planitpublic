@@ -1,18 +1,21 @@
 /*
- Earliest arrival at one day for some stops
+ Eearliest arrival at one day for most stops
+ count 8740
  */
 select x.agency_id,
+       x.agency_name,
        route_id,
        route_long_name,
        service_id,
        stop_id,
        stop_name,
-       min(arrival_time) as latest_departure_time,
+       min(arrival_time) as earliest_arrival_time,
        valid,
        sunday,
        start_date,
        end_date
 from (select r.agency_id,
+             a.agency_name,
              r.route_id,
              r.route_long_name,
              t.service_id,
@@ -28,24 +31,21 @@ from (select r.agency_id,
                join routes r on t.route_id = r.route_id
                join stops s on st.stop_id = s.stop_id
                join calendar c on t.service_id = c.service_id
-      where s.stop_id in (
-                          'at:43:16259:0:1',
-                          'at:43:16258:0:1',
-                          'at:43:16258:0:2'
-          )
+               join agency a on r.agency_id = a.agency_id
+      where r.agency_id not in ('04', '20', '52', '96', '82', '06')
       order by departure_time) as x
 where x.valid = true
   and x.sunday = 1
-group by x.agency_id, route_id, route_long_name, service_id, stop_id, stop_name, valid, sunday,
+group by x.agency_id, x.agency_name, route_id, route_long_name, service_id, stop_id, stop_name, valid, sunday,
          start_date, end_date
 ;
 
-
-
 /*
- Latest depart at one day for some stops
+ Latest depart at one day for most stops
+ count 8740
  */
 select x.agency_id,
+       x.agency_name,
        route_id,
        route_long_name,
        service_id,
@@ -57,6 +57,7 @@ select x.agency_id,
        start_date,
        end_date
 from (select r.agency_id,
+             a.agency_name,
              r.route_id,
              r.route_long_name,
              t.service_id,
@@ -72,15 +73,12 @@ from (select r.agency_id,
                join routes r on t.route_id = r.route_id
                join stops s on st.stop_id = s.stop_id
                join calendar c on t.service_id = c.service_id
-      where s.stop_id in (
-                          'at:43:16259:0:1',
-                          'at:43:16258:0:1',
-                          'at:43:16258:0:2'
-                         )
+               join agency a on r.agency_id = a.agency_id
+      where r.agency_id not in ('04', '20', '52', '96', '82', '06')
       order by departure_time) as x
 where x.valid = true
   and x.sunday = 1
-group by x.agency_id, route_id, route_long_name, service_id, stop_id, stop_name, valid, sunday,
+group by x.agency_id, x.agency_name, route_id, route_long_name, service_id, stop_id, stop_name, valid, sunday,
          start_date, end_date
 ;
 /*
