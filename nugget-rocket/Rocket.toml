@@ -1,0 +1,12 @@
+[default]
+template_dir = "api/templates/"
+
+[default.databases.sea_orm]
+# Postgres
+# make sure to enable "sqlx-postgres" feature in Cargo.toml, i.e default = ["sqlx-postgres"]
+#url = "postgres://root:root@localhost/rocket_example"
+
+# SQLite
+# make sure to enable "sqlx-postgres" feature in Cargo.toml, i.e default = ["sqlx-postgres"]
+#url = "sqlite:///home/walpod/projects/free-com/nugget/nugget-users.sqlite"
+url = "sqlite:///home/walpod/projects/free-com/nugget/nugget-users.sqlite"
