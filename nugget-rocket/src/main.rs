@@ -1,6 +1,6 @@
 //#[macro_use] extern crate rocket;
 
-use crate::postgres_diesel_tries::some_postgres_diesels;
+use crate::postgres_sqlx_tries::some_postgres_sqlx_tries;
 
 mod users;
 mod entities;
@@ -9,8 +9,6 @@ mod sqlite_sqlx_tries;
 mod postgres_sqlx_tries;
 mod postgres_seaorm_tries;
 mod postgres_diesel_tries;
-mod schema;
-mod models;
 
 /*
 #[rocket::launch]
@@ -30,13 +28,8 @@ async fn main() -> Result<(), rocket::Error> {
     Ok(())
 }*/
 
-/*#[tokio::main]
+#[tokio::main]
 async fn main() {
-    //sqlite_tries::some_sqlite_tries().await.unwrap();
-    //postgres_sqlx_tries::some_postgres_sqlx_tries().await.unwrap();
-    postgres_seaorm_tries::do_it_with_sea_orm().await.unwrap();
-}*/
-
-fn main() {
-    postgres_diesel_tries::some_postgres_diesels();
+    some_postgres_sqlx_tries().await.unwrap();
 }
+

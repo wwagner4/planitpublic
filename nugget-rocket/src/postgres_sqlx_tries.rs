@@ -1,41 +1,29 @@
 use std::arch::x86_64::_mm_set1_epi32;
+use std::env;
+use std::fmt::Display;
 use std::sync::Arc;
+use dotenvy::dotenv;
 use sqlx::{Database, Error, PgPool, Pool, Row};
 use sqlx::postgres::{PgPoolOptions, PgRow};
-//use entities::prelude::*;
 
 pub(crate) async fn some_postgres_sqlx_tries() -> Result<(), Error> {
-    println!("creating pool"); // PgPoolOptions::new().max_connections(5)
-    let pool: PgPool = PgPool::connect("postgres://nugget:nugget@localhost:5432/postgres").await.unwrap();
-
-    dbg!(&pool);
-    get_user_cnt(&pool).await.unwrap();
-    list_users(&pool).await;
-    list_pg_tables(&pool).await.unwrap();
-
-    println!("pfiati");
+    let pool = connection_pool().await;
+    list_agencies(&pool).await;
     Ok(())
 }
 
-#[derive(sqlx::FromRow, Debug)]
-struct Cnt {
-    cnt: i64,
+async fn connection_pool() -> PgPool {
+    dotenv().ok();
+    let database_url = env::var("DATABASE_URL").expect("DATABASE_URL must be set");
+    PgPoolOptions::new().max_connections(1);
+    let pool: PgPool = PgPool::connect(&database_url).await.unwrap();
+    pool
 }
 
-async fn get_user_cnt(pool: &PgPool) -> Result<(), sqlx::Error> {
-    println!("getting #users");
-    let cnt = sqlx::query_as::<_, Cnt>("select count(*) as cnt from user_accounts")
-        .fetch_one(pool)
-        .await?;
-    dbg!("#users", &cnt.cnt);
-    Ok(())
-}
-
-async fn list_users(pool: &PgPool) -> Result<(), Error> {
+async fn list_agencies(pool: &PgPool) -> Result<(), Error> {
     let recs = sqlx::query!(
         r#"
-select id, user_code, first_name, last_name, email
-from user_accounts
+select id, agency_id, agency_name, agency_url from agency
         "#
     )
         .fetch_all(pool)
@@ -43,32 +31,21 @@ from user_accounts
 
     for rec in recs {
         println!(
-            "- [{}] {}: {}",
+            "{:3}|{:3}|{}",
             rec.id,
-            &rec.user_code,
-            &rec.email
+            f(&rec.agency_id),
+            rec.agency_name
         );
     }
 
     Ok(())
 }
 
-async fn list_pg_tables(pool: &PgPool) -> Result<(), Error> {
-    let recs = sqlx::query!(
-        r#"
-select tablename, tableowner from pg_tables where schemaname = 'public'
-        "#
-    )
-        .fetch_all(pool)
-        .await?;
-
-    dbg!(recs.len());
-    for rec in recs {
-        dbg!(
-            &rec.tablename,
-            //&rec.tableowner
-        );
+fn f<T: Display>(opt: &Option<T>) -> String {
+    match opt {
+        Some(a) => format!("{a}"),
+        None => String::from("-"),
     }
 
-    Ok(())
 }
+

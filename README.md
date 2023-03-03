@@ -37,3 +37,14 @@ trains are available in your region for your weekend trips.
   * git submodule update gtfsdb
 * Follow the steps described in the 'Using with Docker' section. https://github.com/OpenTransitTools/gtfsdb
 * Import the data by calling the './import.sh' script
+
+### Server (nugget-rocket)
+
+Define the database URL environment variable.
+
+`DATABASE_URL=postgresql://docker:docker@localhost:5432/gtfsdb`
+
+In intellij the variable can be set in the run configuration.
+
+Use a .env file for defining the variable
+
