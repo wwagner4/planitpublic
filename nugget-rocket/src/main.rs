@@ -2,7 +2,7 @@
 
 use crate::postgres_sqlx_tries::some_postgres_sqlx_tries;
 
-mod users;
+mod stops;
 mod entities;
 //mod entitiessqlite;
 mod sqlite_sqlx_tries;
@@ -10,21 +10,12 @@ mod postgres_sqlx_tries;
 mod postgres_seaorm_tries;
 mod postgres_diesel_tries;
 
-/*
-#[rocket::launch]
-fn server() -> Rocket<Build> {
-    rocket::build()
-        .mount("/", routes![index])
-        .mount("/users", routes![get_users, get_user])
-}*/
-
 #[rocket::main]
 async fn main() -> Result<(), rocket::Error> {
     let _rocket = rocket::build()
-        .mount("/users", rocket::routes![users::get_users, users::get_user])
+        .mount("/", rocket::routes![stops::get_stops])
         .launch()
         .await?;
-
     Ok(())
 }
 
