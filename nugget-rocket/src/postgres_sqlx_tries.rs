@@ -8,7 +8,7 @@ use sqlx::postgres::{PgPoolOptions, PgRow};
 
 pub(crate) async fn some_postgres_sqlx_tries() -> Result<(), Error> {
     let pool = connection_pool().await;
-    list_agencies(&pool).await;
+    list_stops(&pool).await;
     Ok(())
 }
 
@@ -16,14 +16,14 @@ async fn connection_pool() -> PgPool {
     dotenv().ok();
     let database_url = env::var("DATABASE_URL").expect("DATABASE_URL must be set");
     PgPoolOptions::new().max_connections(1);
-    let pool: PgPool = PgPool::connect(&database_url).await.unwrap();
-    pool
+    PgPool::connect(&database_url).await.unwrap()
 }
 
-async fn list_agencies(pool: &PgPool) -> Result<(), Error> {
+async fn list_stops(pool: &PgPool) -> Result<(), Error> {
     let recs = sqlx::query!(
         r#"
-select id, agency_id, agency_name, agency_url from agency
+select stop_id, stop_name from stops
+limit 10
         "#
     )
         .fetch_all(pool)
@@ -31,10 +31,9 @@ select id, agency_id, agency_name, agency_url from agency
 
     for rec in recs {
         println!(
-            "{:3}|{:3}|{}",
-            rec.id,
-            f(&rec.agency_id),
-            rec.agency_name
+            "{:20}|{}",
+            rec.stop_id,
+            rec.stop_name,
         );
     }
 

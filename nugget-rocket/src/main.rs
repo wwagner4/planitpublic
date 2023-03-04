@@ -10,18 +10,18 @@ mod postgres_sqlx_tries;
 mod postgres_seaorm_tries;
 mod postgres_diesel_tries;
 
+// #[rocket::main]
+// async fn main() -> Result<(), rocket::Error> {
+//     let _rocket = rocket::build()
+//         .mount("/", rocket::routes![stops::get_stops])
+//         .launch()
+//         .await?;
+//     Ok(())
+// }
+
+
 #[rocket::main]
-async fn main() -> Result<(), rocket::Error> {
-    let _rocket = rocket::build()
-        .mount("/", rocket::routes![stops::get_stops])
-        .launch()
-        .await?;
-    Ok(())
-}
-
-
-/*#[tokyo::main] <- here you can use rocket also. seems to enable async as well
 async fn main() {
     some_postgres_sqlx_tries().await.unwrap();
 }
-*/
+
