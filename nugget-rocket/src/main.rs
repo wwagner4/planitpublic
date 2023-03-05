@@ -15,16 +15,11 @@ mod postgres_diesel_tries;
  async fn main() -> Result<(), rocket::Error> {
      let _rocket = rocket::build()
          .mount("/", rocket::routes![stops::get_stops])
-         .manage(JtfsDb {pool: connection_pool().await})
+         .manage(connection_pool().await)
          .launch()
          .await?;
      Ok(())
  }
-
-pub struct JtfsDb {
-    pub pool: PgPool
-}
-
 
 /*#[rocket::main]
 async fn main() {

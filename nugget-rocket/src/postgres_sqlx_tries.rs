@@ -18,7 +18,7 @@ pub(crate) async fn some_postgres_sqlx_tries() -> Result<(), Error> {
 pub(crate) async fn connection_pool() -> PgPool {
     dotenv().ok();
     let database_url = env::var("DATABASE_URL").expect("DATABASE_URL must be set");
-    PgPoolOptions::new().max_connections(1);
+    PgPoolOptions::new().max_connections(5);
     PgPool::connect(&database_url).await.unwrap()
 }
 
@@ -26,7 +26,7 @@ pub(crate) async fn read_stops(pool: &PgPool) -> Result<Vec<Stop>, Error> {
     let recs = sqlx::query!(
         r#"
 select stop_id, stop_name from stops
-limit 1000
+limit 10
         "#
     )
         .fetch_all(pool)
