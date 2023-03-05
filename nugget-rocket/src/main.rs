@@ -1,6 +1,7 @@
 //#[macro_use] extern crate rocket;
 
-use crate::postgres_sqlx_tries::some_postgres_sqlx_tries;
+use sqlx::PgPool;
+use crate::postgres_sqlx_tries::{connection_pool, some_postgres_sqlx_tries};
 
 mod stops;
 mod entities;
@@ -14,10 +15,15 @@ mod postgres_diesel_tries;
  async fn main() -> Result<(), rocket::Error> {
      let _rocket = rocket::build()
          .mount("/", rocket::routes![stops::get_stops])
+         .manage(JtfsDb {pool: connection_pool().await})
          .launch()
          .await?;
      Ok(())
  }
+
+pub struct JtfsDb {
+    pub pool: PgPool
+}
 
 
 /*#[rocket::main]
