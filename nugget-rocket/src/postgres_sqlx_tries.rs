@@ -5,10 +5,13 @@ use std::sync::Arc;
 use dotenvy::dotenv;
 use sqlx::{Database, Error, PgPool, Pool, Row};
 use sqlx::postgres::{PgPoolOptions, PgRow};
+use crate::stops::Stop;
 
 pub(crate) async fn some_postgres_sqlx_tries() -> Result<(), Error> {
     let pool = connection_pool().await;
-    list_stops(&pool).await;
+    for s in read_stops(&pool).await? {
+        println!("- {} {}", s.id, s.name)
+    };
     Ok(())
 }
 
@@ -19,32 +22,21 @@ async fn connection_pool() -> PgPool {
     PgPool::connect(&database_url).await.unwrap()
 }
 
-async fn list_stops(pool: &PgPool) -> Result<(), Error> {
+async fn read_stops(pool: &PgPool) -> Result<Vec<Stop>, Error> {
     let recs = sqlx::query!(
         r#"
 select stop_id, stop_name from stops
-limit 10
+limit 1000
         "#
     )
         .fetch_all(pool)
         .await?;
 
-    for rec in recs {
-        println!(
-            "{:20}|{}",
-            rec.stop_id,
-            rec.stop_name,
-        );
-    }
-
-    Ok(())
+    let stops = recs.iter().map(|rec| {
+        Stop {
+            id: String::from(&rec.stop_id),
+            name: String::from(&rec.stop_name),
+        }
+    });
+    Ok(stops.collect::<Vec<_>>())
 }
-
-fn f<T: Display>(opt: &Option<T>) -> String {
-    match opt {
-        Some(a) => format!("{a}"),
-        None => String::from("-"),
-    }
-
-}
-
