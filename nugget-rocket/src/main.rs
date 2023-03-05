@@ -1,15 +1,7 @@
-//#[macro_use] extern crate rocket;
-
-use sqlx::PgPool;
-use crate::postgres_sqlx_tries::{connection_pool, some_postgres_sqlx_tries};
+use crate::manage_database::{connection_pool};
 
 mod stops;
-mod entities;
-//mod entitiessqlite;
-mod sqlite_sqlx_tries;
-mod postgres_sqlx_tries;
-mod postgres_seaorm_tries;
-mod postgres_diesel_tries;
+mod manage_database;
 
 #[rocket::main]
  async fn main() -> Result<(), rocket::Error> {
@@ -20,9 +12,3 @@ mod postgres_diesel_tries;
          .await?;
      Ok(())
  }
-
-/*#[rocket::main]
-async fn main() {
-    some_postgres_sqlx_tries().await.unwrap();
-}
-*/

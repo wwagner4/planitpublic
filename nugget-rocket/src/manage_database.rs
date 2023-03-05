@@ -1,19 +1,8 @@
-use std::arch::x86_64::_mm_set1_epi32;
 use std::env;
-use std::fmt::Display;
-use std::sync::Arc;
 use dotenvy::dotenv;
-use sqlx::{Database, Error, PgPool, Pool, Row};
-use sqlx::postgres::{PgPoolOptions, PgRow};
+use sqlx::{Error, PgPool};
+use sqlx::postgres::{PgPoolOptions};
 use crate::stops::Stop;
-
-pub(crate) async fn some_postgres_sqlx_tries() -> Result<(), Error> {
-    let pool = connection_pool().await;
-    for s in read_stops(&pool).await? {
-        println!("- {} {}", s.id, s.name)
-    };
-    Ok(())
-}
 
 pub(crate) async fn connection_pool() -> PgPool {
     dotenv().ok();
