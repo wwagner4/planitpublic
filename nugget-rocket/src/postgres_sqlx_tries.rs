@@ -15,14 +15,14 @@ pub(crate) async fn some_postgres_sqlx_tries() -> Result<(), Error> {
     Ok(())
 }
 
-async fn connection_pool() -> PgPool {
+pub(crate) async fn connection_pool() -> PgPool {
     dotenv().ok();
     let database_url = env::var("DATABASE_URL").expect("DATABASE_URL must be set");
     PgPoolOptions::new().max_connections(1);
     PgPool::connect(&database_url).await.unwrap()
 }
 
-async fn read_stops(pool: &PgPool) -> Result<Vec<Stop>, Error> {
+pub(crate) async fn read_stops(pool: &PgPool) -> Result<Vec<Stop>, Error> {
     let recs = sqlx::query!(
         r#"
 select stop_id, stop_name from stops
