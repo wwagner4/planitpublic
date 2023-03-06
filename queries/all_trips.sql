@@ -9,6 +9,8 @@ select x.agency_id,
        service_id,
        stop_id,
        stop_name,
+       stop_lat,
+       stop_lon,
        min(arrival_time) as earliest_arrival_time,
        valid,
        sunday,
@@ -21,6 +23,8 @@ from (select r.agency_id,
              t.service_id,
              s.stop_id,
              s.stop_name,
+             s.stop_lat,
+             s.stop_lon,
              st.arrival_time,
              ('2023-03-05' between c.start_date and c.end_date) as valid,
              c.sunday,
@@ -36,7 +40,8 @@ from (select r.agency_id,
       order by departure_time) as x
 where x.valid = true
   and x.sunday = 1
-group by x.agency_id, x.agency_name, route_id, route_long_name, service_id, stop_id, stop_name, valid, sunday,
+group by x.agency_id, x.agency_name, route_id, route_long_name, service_id,
+         stop_id, stop_name, stop_lat, stop_lon, valid, sunday,
          start_date, end_date
 ;
 

@@ -1,3 +1,26 @@
+select day, case
+                when day = 1 and monday = 1 then true
+                when day = 2 and tuesday = 1 then true
+                when day = 3 and wednesday = 1 then true
+                when day = 4 and thursday = 1 then true
+                when day = 5 and friday = 1 then true
+                when day = 6 and saturday = 1 then true
+                when day = 0 and sunday = 1 then true
+           else false
+           end
+           as valid_day
+from (select extract(dow from to_date('2023-03-05', 'YYYY-MM-DD')) as day,
+             monday,
+             tuesday,
+             wednesday,
+             thursday,
+             friday,
+             saturday,
+             sunday
+      from calendar
+      limit 20) as x
+;
+
 /*
  Agencies to be excluded
  ('04', '20', '52', '96', '82', '06')
